@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <!--<color name="colorPrimaryDark">#00574B</color>-->
+    <color name="colorPrimaryDark">#FFBE00</color>
+    <color name="colorAccent">#D81B60</color>
+
+    <color name="MaybankYellow">#FFBE00</color>
+    <color name="MainPageBackground">#F2F2F2</color>
+    <color name="FloatButton">#F25925</color>
+    <color name="ItemBottom">#E9E2D0</color>
+    <color name="MainButton">#000000</color>
+
+    <color name="TextButton">#FFFFFF</color>
+    <color name="TextMain">#000000</color>
+    <color name="TextSub">#A2A2A2</color>
+
+
+</resources>
