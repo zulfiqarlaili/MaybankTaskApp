@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.ParseException;
 import java.util.List;
@@ -21,18 +20,18 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
     private List<TaskModel> list_task;
     private Context context;
     private DatabaseHelper databaseHelper;
-    View itemView;
 
-    public TaskAdapter(List<TaskModel> list_bill, Context context) {
+    TaskAdapter(List<TaskModel> list_bill, Context context) {
         this.list_task = list_bill;
         this.context = context;
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView txt_title,txt_start_date,txt_end_date,txt_time_left,txt_status;
-        public CheckBox cb_completed;
-        public ImageView iv_delete;
-        public MyViewHolder(@NonNull View view) {
+    class MyViewHolder extends RecyclerView.ViewHolder {
+        TextView txt_title, txt_start_date, txt_end_date, txt_time_left, txt_status;
+        CheckBox cb_completed;
+        ImageView iv_delete;
+
+        MyViewHolder(@NonNull View view) {
             super(view);
             txt_title = itemView.findViewById(R.id.txt_title);
             txt_start_date = itemView.findViewById(R.id.txt_start_date);
@@ -48,29 +47,36 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         databaseHelper = new DatabaseHelper(context);
-        itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_task,viewGroup,false);
+        final View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_task, viewGroup, false);
         return new MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final MyViewHolder holder, int i) {
+        final int position = holder.getAdapterPosition();
         final TaskModel task = list_task.get(position);
         holder.txt_title.setText(task.getTitle());
         holder.txt_start_date.setText(task.getStart_date());
         holder.txt_end_date.setText(task.getEnd_date());
         try {
-            holder.txt_time_left.setText(Helper.CalculateTimeLeft(task.getStart_date(),task.getEnd_date()).replace("-","")+" hrs");
+
+            final String timeLeft = Helper.CalculateTimeLeft(task.getStart_date(), task.getEnd_date()).replace("-", "");
+            holder.txt_time_left.setText(String.format("%s hrs", timeLeft));
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        if(task.getIsCompleted()) holder.txt_status.setText("Complete");else holder.txt_status.setText("Incomplete");
-        if(task.getIsCompleted()) holder.cb_completed.setChecked(true);else holder.cb_completed.setChecked(false);
+        if (task.getIsCompleted()) holder.txt_status.setText(context.getString(R.string.complete));
+        else holder.txt_status.setText(context.getString(R.string.incomplete));
+        if (task.getIsCompleted()) holder.cb_completed.setChecked(true);
+        else holder.cb_completed.setChecked(false);
 
 
         holder.cb_completed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(holder.cb_completed.isChecked()) holder.txt_status.setText("Complete");else holder.txt_status.setText("Incomplete");
+                if (holder.cb_completed.isChecked())
+                    holder.txt_status.setText(context.getString(R.string.complete));
+                else holder.txt_status.setText(context.getString(R.string.incomplete));
                 task.setIsCompleted(holder.cb_completed.isChecked());
                 databaseHelper.updateData(task);
 
@@ -82,19 +88,19 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
             @Override
             public void onClick(View view) {
                 new AlertDialog.Builder(context)
-                        .setMessage("Delete "+task.getTitle()+" from the list?")
+                        .setMessage("Delete " + task.getTitle() + " from the list?")
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 databaseHelper.deleteData(task.getId());
-                                ((MainActivity)context).refreshList(position);
+                                ((MainActivity) context).refreshList(position);
                             }
                         }).setNegativeButton("No", null).show();
             }
         });
 
 
-        itemView.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, AddNewItemActivity.class);
@@ -111,9 +117,5 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.MyViewHolder> 
     @Override
     public int getItemCount() {
         return list_task.size();
-    }
-
-    public List<TaskModel> getList_task(){
-        return list_task;
     }
 }

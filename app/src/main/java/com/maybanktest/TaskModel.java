@@ -1,13 +1,13 @@
 package com.maybanktest;
 
 public class TaskModel {
-    String id;
-    String title;
-    String start_date;
-    String end_date;
-    boolean isCompleted;
+    private String id;
+    private String title;
+    private String start_date;
+    private String end_date;
+    private boolean isCompleted;
 
-    public TaskModel(String id,String title, String start_date, String end_date, boolean isCompleted) {
+    TaskModel(String id, String title, String start_date, String end_date, boolean isCompleted) {
         this.id = id;
         this.title = title;
         this.start_date = start_date;
@@ -15,7 +15,7 @@ public class TaskModel {
         this.isCompleted = isCompleted;
     }
 
-    public String getId() {
+    String getId() {
         return id;
     }
 
@@ -23,7 +23,7 @@ public class TaskModel {
         this.id = id;
     }
 
-    public String getTitle() {
+    String getTitle() {
         return title;
     }
 
@@ -31,7 +31,7 @@ public class TaskModel {
         this.title = title;
     }
 
-    public String getStart_date() {
+    String getStart_date() {
         return start_date;
     }
 
@@ -39,7 +39,7 @@ public class TaskModel {
         this.start_date = start_date;
     }
 
-    public String getEnd_date() {
+    String getEnd_date() {
         return end_date;
     }
 
@@ -47,11 +47,11 @@ public class TaskModel {
         this.end_date = end_date;
     }
 
-    public boolean getIsCompleted() {
+    boolean getIsCompleted() {
         return isCompleted;
     }
 
-    public void setIsCompleted(boolean isCompleted) {
+    void setIsCompleted(boolean isCompleted) {
         this.isCompleted = isCompleted;
     }
 }

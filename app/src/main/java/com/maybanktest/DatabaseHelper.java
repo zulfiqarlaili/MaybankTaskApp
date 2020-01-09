@@ -5,23 +5,22 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    public static final String TAG = "DatabaseHelper";
+    private static final String TAG = "DatabaseHelper";
 
-    public static final String TABLE_NAME = "task";
-    public static final String COLUMN_ID = "id";
-    public static final String COLUMN_TITLE = "title";
-    public static final String COLUMN_START = "startDate";
-    public static final String COLUMN_END = "endDate";
-    public static final String COLUMN_ISCOMPLETED = "isCompleted";
+    private static final String TABLE_NAME = "task";
+    private static final String COLUMN_ID = "id";
+    private static final String COLUMN_TITLE = "title";
+    private static final String COLUMN_START = "startDate";
+    private static final String COLUMN_END = "endDate";
+    private static final String COLUMN_ISCOMPLETED = "isCompleted";
 
 
-    public DatabaseHelper(Context context) {
-        super(context, TABLE_NAME, null,1);
+    DatabaseHelper(Context context) {
+        super(context, TABLE_NAME, null, 1);
     }
 
     //when initialize this class, it will go to onUpgrade first to check any database has been create then go to onCreate to create database
@@ -48,56 +47,47 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public boolean addData(TaskModel task){
+    boolean addData(TaskModel task) {
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(COLUMN_TITLE,task.getTitle());
-        contentValues.put(COLUMN_START,task.getStart_date());
-        contentValues.put(COLUMN_END,task.getEnd_date());
-        contentValues.put(COLUMN_ISCOMPLETED,task.getIsCompleted());
+        contentValues.put(COLUMN_TITLE, task.getTitle());
+        contentValues.put(COLUMN_START, task.getStart_date());
+        contentValues.put(COLUMN_END, task.getEnd_date());
+        contentValues.put(COLUMN_ISCOMPLETED, task.getIsCompleted());
 
 
-        Log.d(TAG,"addData: Adding "+ task.getTitle() +" to "+TABLE_NAME);
-        long result = db.insert(TABLE_NAME,null,contentValues);
-        if(result == -1){
-            return false;
-        }else {
-            return true;
-        }
+        Log.d(TAG, "addData: Adding " + task.getTitle() + " to " + TABLE_NAME);
+        long result = db.insert(TABLE_NAME, null, contentValues);
+        return result != -1;
 
     }
 
-    public boolean updateData(TaskModel task){
+    boolean updateData(TaskModel task) {
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(COLUMN_TITLE,task.getTitle());
-        contentValues.put(COLUMN_START,task.getStart_date());
-        contentValues.put(COLUMN_END,task.getEnd_date());
-        contentValues.put(COLUMN_ISCOMPLETED,task.getIsCompleted());
+        contentValues.put(COLUMN_TITLE, task.getTitle());
+        contentValues.put(COLUMN_START, task.getStart_date());
+        contentValues.put(COLUMN_END, task.getEnd_date());
+        contentValues.put(COLUMN_ISCOMPLETED, task.getIsCompleted());
 
 
-        Log.d(TAG,"updateData: Updating "+ task.getTitle() +" to "+TABLE_NAME);
+        Log.d(TAG, "updateData: Updating " + task.getTitle() + " to " + TABLE_NAME);
         long result = db.update(TABLE_NAME, contentValues, "id = ?", new String[]{task.getId()});
 
-        if(result == -1){
-            return false;
-        }else {
-            return true;
-        }
+        return result != -1;
 
     }
 
-    public boolean deleteData(String id)
-    {
+    void deleteData(String id) {
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(TABLE_NAME, COLUMN_ID + "=?", new String[]{id}) > 0;
+        db.delete(TABLE_NAME, COLUMN_ID + "=?", new String[]{id});
     }
-    public Cursor getData(){
+
+    Cursor getData() {
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "SELECT * FROM "+ TABLE_NAME;
-        Cursor data = db.rawQuery(query,null);
-        return data;
+        String query = "SELECT * FROM " + TABLE_NAME;
+        return db.rawQuery(query, null);
     }
 }
